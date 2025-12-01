@@ -1,0 +1,167 @@
+---
+title: Security Standards
+---
+
+## Overview
+
+Security is a fundamental consideration in all OneZero development. We implement defense-in-depth with multiple layers of protection, validate all inputs, manage secrets carefully, and maintain security awareness throughout the development lifecycle.
+
+## Secrets Management
+
+We never commit secrets to version control. Environment variables, API keys, passwords, and other sensitive data are stored in .env files that are git-ignored or in secure secret management systems.
+
+We use Doppler for secret management, syncing secrets to CI/CD environments and development machines. Doppler provides centralized secret management with access controls, audit logs, and automatic rotation capabilities.
+
+For local development, .env files are used but are always listed in .gitignore. These files are never committed. We provide .env.example files with placeholder values to document required environment variables without exposing actual secrets.
+
+Vault or similar secret managers handle production secrets in cloud environments. These systems provide encryption at rest, access controls, and audit trails.
+
+## Authentication Standards
+
+We implement authentication using multiple standards depending on use case:
+- JWT (JSON Web Tokens) for stateless API authentication
+- Session-based authentication for traditional web applications
+- OAuth 2.0 for third-party authentication and authorization
+- Passkeys/WebAuthn for passwordless, phishing-resistant authentication
+
+JWT tokens have appropriate expiration times and are validated thoroughly on each request. We use refresh tokens for long-lived sessions without exposing long-lived access tokens.
+
+Session-based authentication uses secure, HTTP-only cookies with appropriate SameSite attributes to prevent CSRF attacks. Sessions are stored server-side with automatic expiration.
+
+OAuth 2.0 implementations follow best practices including PKCE for public clients and secure redirect URI validation. We validate all tokens and never trust client-side information without verification.
+
+## Input Validation
+
+All user input is validated using Zod or class-validator. Validation happens on both client and server sides. Client-side validation provides immediate user feedback, while server-side validation is the security boundary that cannot be bypassed.
+
+We use allowlist validation (defining what is allowed) rather than blocklist validation (defining what is blocked). Allowlists are more secure as they default to rejection.
+
+Validation schemas are comprehensive, checking data types, formats, ranges, and business rules. We validate at system boundaries: API endpoints, form submissions, and data ingestion points.
+
+## SQL Injection Prevention
+
+We prevent SQL injection by using parameterized queries exclusively. ORMs like Drizzle, Prisma, or SQLAlchemy handle parameterization automatically. We never construct SQL queries with string concatenation or interpolation.
+
+For complex queries where raw SQL is needed, we use the ORM's parameterized query capabilities to keep data separate from query logic.
+
+## XSS Prevention
+
+We prevent cross-site scripting (XSS) by:
+- Escaping output automatically through framework defaults (React, Vue, etc.)
+- Using Content Security Policy (CSP) headers to restrict script sources
+- Validating and sanitizing rich text input
+- Avoiding `dangerouslySetInnerHTML` or equivalent unless absolutely necessary
+- When HTML rendering is required, using sanitization libraries like DOMPurify
+
+Frameworks like React provide XSS protection by default through escaped output. We rely on these defaults and only bypass them with extreme caution and thorough sanitization.
+
+## CSRF Prevention
+
+We prevent Cross-Site Request Forgery through:
+- SameSite cookie attributes for session cookies
+- CSRF tokens for state-changing operations
+- Validating Origin and Referer headers for additional protection
+
+Modern browsers' SameSite=Lax or SameSite=Strict attributes provide strong CSRF protection for most cases. We add CSRF tokens for sensitive operations requiring extra protection.
+
+## Dependency Vulnerabilities
+
+We use Dependabot or Renovate for automated dependency updates. These tools scan for known vulnerabilities and create PRs to update affected packages.
+
+We review security updates promptly and prioritize patches for critical vulnerabilities. Automated tests run on update PRs to catch breaking changes before merge.
+
+For open-source projects, we use CodeQL for static security analysis. CodeQL detects security vulnerabilities and coding errors through semantic code analysis.
+
+## Security Linting
+
+We use security-focused linting tools appropriate to each language. These tools catch common security issues like hardcoded secrets, weak cryptography, and insecure configurations during development.
+
+For open-source projects, CodeQL provides comprehensive security analysis in CI pipelines.
+
+## Sensitive Data in Logs
+
+We never log sensitive data including passwords, tokens, API keys, personal information, or payment details. Log sanitization removes or redacts sensitive fields before writing logs.
+
+Logging libraries are configured to automatically redact known sensitive fields. We review logging statements during code review to ensure no sensitive data is logged.
+
+## Security Reviews
+
+All pull requests undergo security review. Reviewers check for common vulnerabilities, proper input validation, secure authentication and authorization, and appropriate secret management.
+
+High-risk changes involving authentication, authorization, payment processing, or data handling receive extra scrutiny and may require security specialist review.
+
+## Error Messages
+
+Error messages provide helpful information without exposing implementation details. We avoid leaking stack traces, database schema information, or file paths in production error messages.
+
+Development environments show detailed errors for debugging. Production environments show generic errors to users while logging detailed information for developers.
+
+## HTTPS Everywhere
+
+All network communication uses HTTPS. We enforce HTTPS through redirect rules and HTTP Strict Transport Security (HSTS) headers. APIs reject HTTP requests or redirect to HTTPS.
+
+## Rate Limiting
+
+Rate limiting is implemented at the CDN/Cloudflare level to prevent abuse and DoS attacks. Rate limits are configured based on endpoint sensitivity and user authentication status.
+
+## Security Headers
+
+We implement comprehensive security headers:
+- Content-Security-Policy to restrict resource loading
+- X-Content-Type-Options to prevent MIME sniffing
+- X-Frame-Options to prevent clickjacking
+- Strict-Transport-Security to enforce HTTPS
+- Referrer-Policy to control referrer information
+
+These headers are configured in web servers, reverse proxies, or application middleware.
+
+## Rules
+
+1. Never commit secrets to version control
+2. Store secrets in .env files (git-ignored) or secret managers
+3. Use Doppler for secret management and CI/CD sync
+4. Provide .env.example with placeholder values
+5. Always list .env in .gitignore
+6. Use Vault or secret manager for production secrets
+7. Implement JWT for stateless API authentication
+8. Implement session-based auth for web applications
+9. Implement OAuth 2.0 for third-party auth
+10. Implement Passkeys/WebAuthn for passwordless auth
+11. JWT tokens must have appropriate expiration times
+12. Use refresh tokens for long-lived sessions
+13. Session cookies must be secure and HTTP-only
+14. Session cookies must have appropriate SameSite attributes
+15. OAuth 2.0 must use PKCE for public clients
+16. Validate all tokens and never trust client-side information
+17. Validate all user input with Zod or class-validator
+18. Validate on both client and server sides
+19. Server-side validation is the security boundary
+20. Use allowlist validation (define what is allowed)
+21. Validate at system boundaries (APIs, forms, data ingestion)
+22. Use parameterized queries exclusively for SQL
+23. Never construct SQL with string concatenation
+24. Use ORM parameterization for complex queries
+25. Escape output automatically through framework defaults
+26. Use Content Security Policy (CSP) headers
+27. Validate and sanitize rich text input
+28. Avoid dangerouslySetInnerHTML unless absolutely necessary
+29. Use DOMPurify or similar when HTML rendering required
+30. Prevent CSRF with SameSite cookie attributes
+31. Use CSRF tokens for state-changing operations
+32. Validate Origin and Referer headers
+33. Use Dependabot or Renovate for automated dependency updates
+34. Review security updates promptly
+35. Prioritize critical vulnerability patches
+36. Use CodeQL for open-source static security analysis
+37. Never log passwords, tokens, API keys, PII, or payment details
+38. Configure log sanitization to redact sensitive fields
+39. All PRs undergo security review
+40. High-risk changes require extra security scrutiny
+41. Error messages helpful but don't expose implementation details
+42. Show detailed errors in development, generic in production
+43. All network communication uses HTTPS
+44. Enforce HTTPS with redirects and HSTS headers
+45. Implement rate limiting at CDN/Cloudflare level
+46. Configure rate limits based on endpoint sensitivity
+47. Implement security headers (CSP, X-Content-Type-Options, X-Frame-Options, HSTS, Referrer-Policy)
+48. Configure security headers in web servers or middleware

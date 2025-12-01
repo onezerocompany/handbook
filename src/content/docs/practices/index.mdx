@@ -1,0 +1,47 @@
+---
+title: Practices
+description: Development practices, patterns, and processes that guide how we build products at OneZero.
+tableOfContents: false
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Our practices ensure quality, consistency, and velocity across all projects. These guides cover architecture patterns, security, version control, and deployment strategies.
+
+<CardGrid stagger>
+  <Card title="Architecture & Design Patterns" icon="puzzle">
+    SOLID principles, project structure, state management, and design patterns for maintainable code.
+
+    [View Architecture Standards →](/practices/architecture/)
+  </Card>
+
+  <Card title="Database Standards" icon="document">
+    PostgreSQL for production, SQLite for local development. Schema design, migrations, and performance optimization.
+
+    [View Database Standards →](/practices/database/)
+  </Card>
+
+  <Card title="Security Standards" icon="seti:lock">
+    Defense-in-depth, input validation, secrets management, and security awareness throughout development.
+
+    [View Security Standards →](/practices/security/)
+  </Card>
+
+  <Card title="Version Control" icon="github">
+    Git with GitHub Flow, clean history, meaningful commits, and streamlined collaboration.
+
+    [View Version Control Standards →](/practices/version-control/)
+  </Card>
+
+  <Card title="Code Review" icon="approve-check">
+    Quality control process that catches bugs, shares knowledge, and ensures consistency.
+
+    [View Code Review Standards →](/practices/code-review/)
+  </Card>
+
+  <Card title="DevOps & Deployment" icon="rocket">
+    CI/CD, automation, reliability, and fast feedback cycles for shipping changes quickly and safely.
+
+    [View DevOps Standards →](/practices/devops-deployment/)
+  </Card>
+</CardGrid>

@@ -1,0 +1,99 @@
+---
+title: Hono API Standards
+---
+
+## Overview
+
+Hono is our backend framework of choice for building REST and tRPC APIs. Hono is lightweight, fast, and works seamlessly across multiple runtimes including Node.js, Bun, Cloudflare Workers, and edge environments. Our Hono APIs emphasize type safety, clear API contracts, and comprehensive validation.
+
+## API Style
+
+We build both REST and tRPC APIs using Hono. REST APIs follow standard HTTP conventions with proper status codes and resource-oriented design. tRPC provides end-to-end type safety between frontend and backend, eliminating the need for manual API client code and reducing bugs from API contract mismatches.
+
+## Type Safety
+
+All Hono routes and handlers are fully typed using TypeScript. We leverage Hono's type system to ensure request and response types are correct. For tRPC endpoints, type safety extends from the API definition through to the frontend client, providing compile-time verification of API calls.
+
+## Validation
+
+We use Zod for all input validation. Zod schemas define the shape of request bodies, query parameters, and path parameters. Validation happens automatically before handlers execute, ensuring invalid data never reaches business logic. Zod integrates seamlessly with both Hono and tRPC.
+
+Validation errors return clear, structured error responses with 422 status codes indicating which fields failed validation and why. This helps frontend developers and API consumers quickly identify and fix issues.
+
+## API Documentation
+
+We use OpenAPI/Swagger for REST API documentation. API documentation is automatically generated from our Hono route definitions and Zod schemas. This ensures documentation stays synchronized with actual implementation and provides interactive API exploration tools.
+
+For tRPC APIs, type definitions serve as the primary documentation, supplemented by JSDoc comments where additional context is needed.
+
+## Error Handling
+
+We use custom error classes that map to appropriate HTTP status codes. Common error classes include ValidationError (422), NotFoundError (404), UnauthorizedError (401), and ForbiddenError (403). This standardization makes error handling consistent across all endpoints.
+
+Error responses follow a consistent structure with error codes, messages, and additional context. In development, we include stack traces, while production errors provide only necessary information to avoid leaking implementation details.
+
+## API Versioning
+
+We version APIs using URL path versioning with the format `/v1/resource`. This approach is explicit, easy to understand, and allows multiple API versions to coexist during transitions. We maintain backward compatibility within major versions and communicate breaking changes clearly.
+
+## Rate Limiting
+
+Rate limiting is handled at the CDN/Cloudflare level rather than in application code. This provides DDoS protection and prevents our application servers from being overwhelmed. Rate limits are configured based on user authentication status and endpoint sensitivity.
+
+## Middleware
+
+We use Hono's middleware system for cross-cutting concerns like authentication, logging, request ID tracking, and error handling. Middleware keeps route handlers focused on business logic while ensuring consistent behavior across all endpoints.
+
+Authentication middleware validates JWTs, session tokens, or other credentials before routes execute. Logging middleware tracks request timing, status codes, and errors for monitoring and debugging.
+
+## Database Integration
+
+Hono APIs use Drizzle ORM for database access. Drizzle provides type-safe query building with excellent TypeScript integration. Database queries are typically executed in service layer functions rather than directly in route handlers, maintaining separation of concerns.
+
+## Testing
+
+We test Hono APIs at multiple levels: unit tests for business logic, integration tests for route handlers, and end-to-end tests for complete request flows. We use Jest or Bun's test runner depending on the runtime environment.
+
+API tests verify correct status codes, response bodies, validation behavior, and error handling. We test both success and failure cases comprehensively.
+
+## Deployment
+
+Hono APIs can be deployed to Railway, GCP, Cloudflare Workers, or other platforms depending on runtime requirements. We use environment variables for configuration and feature flags for gradual rollouts.
+
+## Rules
+
+1. Use Hono as the backend framework for all APIs
+2. Support both REST and tRPC API styles
+3. All routes and handlers must be fully typed with TypeScript
+4. Use Zod for all input validation
+5. Validate request bodies, query parameters, and path parameters
+6. Return 422 status code for validation errors with clear field-level messages
+7. Use OpenAPI/Swagger for REST API documentation
+8. Auto-generate documentation from route definitions and schemas
+9. Use custom error classes that map to HTTP status codes
+10. Standardize error response structure across all endpoints
+11. Include stack traces in development, sanitize in production
+12. Version APIs using URL path format (/v1/resource)
+13. Maintain backward compatibility within major versions
+14. Handle rate limiting at CDN/Cloudflare level
+15. Use Hono middleware for authentication, logging, and error handling
+16. Validate JWTs or session tokens in authentication middleware
+17. Track request timing and errors in logging middleware
+18. Use Drizzle ORM for database access
+19. Execute database queries in service layer, not route handlers
+20. Write unit tests for business logic
+21. Write integration tests for route handlers
+22. Write end-to-end tests for complete request flows
+23. Test both success and failure cases comprehensively
+24. Verify status codes, response bodies, and error handling in tests
+25. Deploy to Railway, GCP, Cloudflare Workers, or appropriate platform
+26. Use environment variables for configuration
+27. Use feature flags for gradual rollouts
+28. Follow REST conventions: GET for retrieval, POST for creation, PUT/PATCH for updates, DELETE for removal
+29. Use full HTTP status code range (400, 401, 403, 404, 422, 500)
+30. RESTful endpoints use kebab-case (/user-profile)
+31. Return structured JSON responses
+32. Support pagination for list endpoints
+33. Include request IDs in responses for tracing
+34. Log all errors with sufficient context for debugging
+35. Generic error messages for users, detailed logs for developers

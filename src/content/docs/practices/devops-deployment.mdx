@@ -1,0 +1,215 @@
+---
+title: DevOps & Deployment Standards
+---
+
+## Overview
+
+OneZero's DevOps practices emphasize automation, reliability, and fast feedback cycles. We use continuous integration and deployment to ship changes quickly and safely. Our deployment standards ensure consistent, repeatable deployments with minimal manual intervention.
+
+## CI/CD Platform
+
+We use GitHub Actions for all CI/CD pipelines. GitHub Actions integrates seamlessly with our repositories, provides excellent developer experience, and supports complex workflows. Actions run automatically on push, pull request, and scheduled triggers.
+
+We only use GitHub-authored actions, officially verified actions, or actions from framework makers (e.g., actions published by Vercel, Railway, or other official framework organizations). This security practice ensures we're using trusted, maintained actions and reduces supply chain attack risks.
+
+Workflows are defined as code in `.github/workflows/` and version-controlled with the repository. This ensures pipeline changes are reviewed and tracked like application code.
+
+## Hosting Platforms
+
+We deploy applications to multiple platforms based on requirements:
+- Railway for applications requiring persistent state, databases, and long-running processes
+- GCP (Google Cloud Platform) for services needing specific Google Cloud features or scale
+- Cloudflare for edge computing, static sites, and globally distributed applications
+
+Platform choice depends on application characteristics, scaling requirements, and cost considerations. We standardize deployment patterns within each platform to maintain consistency.
+
+## Environment Configuration
+
+We use environment variables for all configuration. Environment variables provide flexibility across environments without code changes. We never hardcode configuration values.
+
+Environment-specific configuration is managed through:
+- Doppler for secret management and environment sync
+- Platform-specific environment variable configuration (Railway dashboard, GCP Secret Manager, Cloudflare environment variables)
+- .env files for local development (git-ignored)
+
+Feature flags provide runtime configuration for gradual rollouts and A/B testing. We use custom implementations or environment-based flags depending on complexity requirements.
+
+## Infrastructure as Code
+
+We use Terraform for infrastructure definition where manual infrastructure management becomes unwieldy. Terraform provides declarative infrastructure definitions that are version-controlled and reviewable.
+
+For Railway deployments, the platform handles infrastructure, reducing the need for manual IaC. We configure services through Railway's UI or configuration files in the repository.
+
+## Deployment Strategy
+
+We use blue-green deployment strategy for zero-downtime deployments. Blue-green deployments run new versions alongside old versions, then switch traffic once the new version is verified healthy.
+
+This approach enables instant rollbacks by switching traffic back to the previous version if issues arise.
+
+## Preview Deployments
+
+We create preview deployments for every pull request. Preview deployments provide isolated environments where changes can be tested before merging. URLs are automatically generated and added to PR comments.
+
+Preview environments mirror production configuration as closely as possible while using separate databases and services to prevent interference.
+
+## Monitoring
+
+We use PostHog for monitoring, analytics, and error tracking. PostHog provides:
+- Real user monitoring for performance metrics
+- Error tracking and stack traces
+- Feature flag management
+- Product analytics
+
+Monitoring alerts notify the team of critical issues immediately. We track error rates, response times, and system resource usage.
+
+We also use OpenTelemetry for distributed tracing and observability in microservice architectures. OpenTelemetry provides vendor-agnostic instrumentation that can export to multiple backends.
+
+## Logging
+
+We implement structured logging with LogTape or platform-specific logging solutions. Structured logs use JSON format with consistent fields for easy parsing and querying.
+
+Log levels (error, warn, info, debug, trace) categorize log entries by severity. We use appropriate log levels to make production logs meaningful without excessive noise.
+
+Environment-specific logging configuration adjusts verbosity and format:
+- Development: verbose logging with pretty-printed output
+- Production: structured JSON logs with appropriate verbosity
+
+Logs are centralized in platform logging systems (Railway logs, GCP Cloud Logging, Cloudflare logs) for analysis and debugging.
+
+## Continuous Integration Checks
+
+CI pipelines run comprehensive checks on every push and pull request:
+- Linting to enforce code style
+- Code formatting verification
+- Type checking to catch type errors
+- Unit and integration tests
+- Build verification
+- Security scanning with dependency vulnerability checks
+- Bundle size analysis to prevent performance regressions
+
+Failed checks block merges, ensuring only quality code reaches main branch.
+
+## Deployment Automation
+
+Deployments to production happen automatically when changes merge to main branch. This continuous deployment approach reduces deployment friction and enables rapid iteration.
+
+Staging environments receive deployments automatically for pre-production testing. We verify changes in staging before promoting to production when manual verification is needed.
+
+## Rollback Procedures
+
+We maintain clear rollback procedures for when deployments introduce issues. Blue-green deployments enable instant rollbacks by switching traffic to the previous version.
+
+For database migrations, we use backward-compatible migrations that allow rolling back application code without rolling back database changes. This prevents data loss and simplifies rollback procedures.
+
+## Database Migrations
+
+Database migrations are version-controlled and run automatically during deployment. We use ORM migration tools (Drizzle migrations, Prisma migrate, Alembic for Python) that generate and apply migrations.
+
+Migrations are tested in development and staging before production deployment. We write migrations that are backward-compatible with the previous application version, enabling zero-downtime deployments.
+
+## Secrets in CI/CD
+
+CI/CD secrets are stored in GitHub Actions secrets or synced from Doppler. Secrets are never exposed in logs or build outputs. We configure CI to fail builds if secrets are detected in code.
+
+## Build Caching
+
+We use build caching to speed up CI/CD pipelines. Docker layer caching, dependency caching, and build artifact caching reduce build times significantly.
+
+Caching strategies balance speed with cache invalidation to ensure builds use fresh dependencies when needed.
+
+## Rules
+
+### CI/CD Platform
+
+1. Use GitHub Actions for all CI/CD pipelines
+2. Only use GitHub-authored, officially verified, or framework maker actions
+3. Never use unverified third-party actions
+4. Define workflows as code in .github/workflows/
+5. Version-control pipeline definitions
+
+### Hosting Platforms
+
+6. Deploy to Railway for stateful applications and databases
+7. Deploy to GCP for Google Cloud-specific features
+8. Deploy to Cloudflare for edge computing and static sites
+9. Choose platform based on requirements, scale, and cost
+
+### Environment Configuration
+
+10. Use environment variables for all configuration
+11. Never hardcode configuration values
+12. Manage secrets through Doppler
+13. Use platform-specific environment configuration
+14. Use .env files for local development (git-ignored)
+15. Use feature flags for gradual rollouts and A/B testing
+
+### Infrastructure as Code
+
+16. Use Terraform for infrastructure as code when needed
+17. Railway handles infrastructure for Railway deployments
+
+### Deployment Strategy
+
+18. Use blue-green deployment strategy for zero downtime
+19. Enable instant rollbacks by switching traffic
+
+### Preview Deployments
+
+20. Create preview deployments for every pull request
+21. Preview environments mirror production configuration
+22. Use separate databases and services for preview environments
+
+### Monitoring
+
+23. Use PostHog for monitoring, analytics, and error tracking
+24. Monitor error rates, response times, and resource usage
+25. Alert team of critical issues immediately
+26. Use OpenTelemetry for distributed tracing
+
+### Logging
+
+27. Implement structured logging with LogTape
+28. Use JSON format for logs in production
+29. Use appropriate log levels (error, warn, info, debug, trace)
+30. Adjust logging verbosity and format per environment
+31. Centralize logs in platform logging systems
+
+### Continuous Integration Checks
+
+32. Run linting in CI on every push and PR
+33. Verify code formatting in CI
+34. Run type checking in CI
+35. Run unit and integration tests in CI
+36. Verify builds succeed in CI
+37. Run security scanning in CI
+38. Analyze bundle size in CI
+39. Block merges when CI checks fail
+
+### Deployment Automation
+
+40. Deploy automatically to production when changes merge to main
+41. Deploy automatically to staging for pre-production testing
+
+### Rollback Procedures
+
+42. Maintain clear rollback procedures
+43. Use blue-green deployments for instant rollbacks
+
+### Database Migrations
+
+44. Write backward-compatible database migrations
+45. Version-control database migrations
+46. Run migrations automatically during deployment
+47. Test migrations in development and staging first
+
+### Secrets Management
+
+48. Store CI/CD secrets in GitHub Actions secrets or Doppler
+49. Never expose secrets in logs or build outputs
+50. Fail builds if secrets detected in code
+
+### Build Caching
+
+51. Use build caching for faster pipelines
+52. Cache Docker layers, dependencies, and build artifacts
+53. Balance cache speed with invalidation for fresh dependencies

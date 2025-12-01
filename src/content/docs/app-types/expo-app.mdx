@@ -1,0 +1,131 @@
+---
+title: Expo App Standards
+---
+
+## Overview
+
+Expo is OneZero's preferred framework for cross-platform mobile development, targeting iOS, Android, and web from a single codebase. Expo provides a managed workflow with excellent developer experience, over-the-air updates, and comprehensive native functionality through Expo modules. Our Expo apps emphasize code sharing, native performance, and platform-appropriate design.
+
+## Expo Router
+
+We use Expo Router for navigation and routing. Expo Router provides file-based routing similar to Next.js, making navigation structure clear from the file system. It supports deep linking, type-safe navigation, and shared routes across platforms.
+
+Expo Router also handles web routing when targeting web platforms, providing a unified navigation system across iOS, Android, and web. This eliminates the need to maintain separate routing logic for different platforms.
+
+## React Native and React
+
+Expo apps use React Native with functional components and hooks exclusively. We leverage React's component model and hooks for state management, side effects, and logic reuse. Custom hooks encapsulate reusable logic and keep components focused on presentation.
+
+We use React Navigation's underlying navigation primitives through Expo Router's abstraction, giving us powerful navigation capabilities with a better developer experience.
+
+## State Management
+
+We use Zustand for global state management. Zustand provides a minimal, un-opinionated API for state management without boilerplate. It works seamlessly with React hooks and supports middleware for persistence, logging, and devtools.
+
+For server state and data fetching, we use React Query (TanStack Query). React Query handles caching, background updates, and request deduplication automatically. This separation between client state (Zustand) and server state (React Query) keeps concerns clear.
+
+## Styling
+
+We use Tailwind CSS through NativeWind for styling. NativeWind brings Tailwind's utility-first styling to React Native, providing consistent styling across web and mobile. This approach enables rapid UI development and excellent design system consistency.
+
+For components, we use custom components built with NativeWind or shadcn/ui adapted for React Native. Component libraries provide consistent, accessible UI elements.
+
+## Platform-Specific Code
+
+We handle platform-specific code using `Platform.select()` and conditional imports. Platform.select chooses values based on the current platform (iOS, Android, web), while conditional imports load different implementations for each platform.
+
+We minimize platform-specific code, preferring Expo's cross-platform APIs and components. When platform differences are necessary, we encapsulate them in dedicated modules with unified interfaces.
+
+## Native Modules
+
+We use Expo modules and config plugins for native functionality. Expo modules provide access to device features like camera, location, notifications, and sensors. Config plugins customize the native build process when specialized native code is needed.
+
+This approach provides native functionality without managing separate iOS and Android native projects. Expo's module system is comprehensive and handles most native requirements.
+
+## Forms
+
+We use React Hook Form for form handling and validation. React Hook Form provides excellent performance through uncontrolled inputs and integrates seamlessly with Zod for schema validation. Forms validate on submission with clear error messages.
+
+## Data Fetching
+
+We use React Query (TanStack Query) for all server data fetching. React Query provides automatic caching, background refetching, optimistic updates, and request deduplication. It handles loading and error states declaratively, reducing boilerplate significantly.
+
+API calls are typed with TypeScript and validated with Zod. When using tRPC backends, we get end-to-end type safety without manual type definitions.
+
+## Offline-First
+
+We implement offline-first functionality using local database (SQLite through expo-sqlite) with background sync. Data is stored locally and synced when connectivity is available. React Query's persistence plugins help maintain cache across app restarts.
+
+## Testing
+
+We use Jest for unit and integration tests, and Playwright for end-to-end tests across platforms. We also use snapshot tests for component rendering verification and visual regression tests for UI changes.
+
+Tests cover business logic, component behavior, and critical user flows. We maintain minimum 80% code coverage and practice TDD strictly.
+
+## Performance
+
+We optimize performance through React's memoization (useMemo, useCallback), component lazy loading, and efficient list rendering. We use FlashList instead of FlatList for better performance with large lists.
+
+Images are optimized through Expo's image optimization and CDN caching. We use expo-image for advanced image features like blurhash placeholders.
+
+## Updates
+
+We use Expo's over-the-air (OTA) updates for rapid bug fixes and feature deployments without app store submissions. OTA updates work across iOS and Android and can be targeted to specific user segments.
+
+Critical updates are delivered immediately, while non-critical updates download in the background and apply on next app launch.
+
+## Build and Deployment
+
+We use EAS (Expo Application Services) for building and submitting apps to app stores. EAS Build handles iOS and Android builds in the cloud without requiring local build environments. EAS Submit automates app store submissions.
+
+Preview builds are created for pull requests, allowing testing on real devices before merging.
+
+## Rules
+
+1. Use Expo as preferred framework for cross-platform mobile development
+2. Support iOS, Android, and web from single codebase
+3. Use Expo Router for navigation and routing
+4. Leverage file-based routing structure
+5. Support deep linking and type-safe navigation
+6. Use functional components and hooks exclusively
+7. Use custom hooks for reusable logic
+8. Use Zustand for global state management
+9. Use React Query (TanStack Query) for server state and data fetching
+10. Separate client state (Zustand) from server state (React Query)
+11. Use Tailwind CSS through NativeWind for styling
+12. Use custom components or shadcn/ui adapted for React Native
+13. Use Platform.select() for platform-specific values
+14. Use conditional imports for platform-specific implementations
+15. Minimize platform-specific code - prefer Expo cross-platform APIs
+16. Encapsulate platform differences in dedicated modules
+17. Use Expo modules for native functionality
+18. Use config plugins for native build customization
+19. Use React Hook Form for form handling
+20. Integrate Zod with React Hook Form for validation
+21. Validate forms on submission with clear error messages
+22. Use React Query for all server data fetching
+23. Leverage automatic caching and background refetching
+24. Type API calls with TypeScript and validate with Zod
+25. Use tRPC for end-to-end type safety when possible
+26. Implement offline-first with SQLite and background sync
+27. Use React Query persistence for cache across restarts
+28. Use Jest for unit and integration tests
+29. Use Playwright for end-to-end tests
+30. Use snapshot tests for component verification
+31. Use visual regression tests for UI changes
+32. Minimum 80% code coverage required
+33. Practice Test-Driven Development (TDD) strictly
+34. Tests required for all new features and bug fixes
+35. Use useMemo and useCallback for memoization
+36. Use component lazy loading for code splitting
+37. Use FlashList instead of FlatList for large lists
+38. Optimize images through Expo image optimization and CDN
+39. Use expo-image for advanced image features
+40. Use Expo OTA updates for rapid deployments
+41. Target OTA updates to specific user segments
+42. Download non-critical updates in background
+43. Use EAS Build for iOS and Android builds
+44. Use EAS Submit for app store submissions
+45. Create preview builds for pull requests
+46. Follow React best practices and hooks rules
+47. Follow Expo best practices for performance and user experience

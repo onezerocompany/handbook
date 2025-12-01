@@ -1,0 +1,139 @@
+---
+title: Code Review Standards
+---
+
+## Overview
+
+Code review is a critical quality control process at OneZero. Reviews catch bugs, improve code quality, share knowledge, and ensure consistency. Our code review standards balance thoroughness with development velocity.
+
+## Reviewer Requirements
+
+Pull requests require approval from at least one reviewer when created by AI agents. For human-authored code, approval is required from code owners as defined in the CODEOWNERS file. This ensures appropriate expertise reviews each change.
+
+Code owners are designated for specific directories or file patterns. When a PR touches owned code, the corresponding owner must review and approve. This distributes review responsibility based on domain expertise.
+
+## Pull Request Size
+
+We limit pull requests to 500 lines changed. Smaller PRs are easier to review thoroughly and less likely to introduce bugs. They enable faster feedback cycles and reduce time to merge.
+
+When changes exceed 500 lines, we break them into multiple PRs with logical boundaries. Each PR should be independently reviewable and, ideally, deployable.
+
+## PR Templates and Checklists
+
+We use PR templates with checklists for consistency. Templates prompt authors to include:
+- Summary of changes
+- Testing instructions
+- Screenshots or videos for UI changes
+- Related issue links
+- Breaking changes documentation
+
+Checklists ensure authors have completed necessary steps like writing tests, updating documentation, and verifying CI passes.
+
+## Required PR Information
+
+Every PR must include a clear summary explaining what changed and why. Testing instructions tell reviewers how to verify the changes work correctly. For UI changes, screenshots or videos show the visual impact.
+
+Related issues are linked to provide context and enable tracking. Breaking changes are explicitly documented with migration instructions when applicable.
+
+## Continuous Integration Checks
+
+PRs must pass critical CI checks before merging. We don't require all checks to pass, but critical checks (linting, type checking, tests, build verification, security scans) must succeed.
+
+This balance allows non-critical checks like documentation builds or optional analyses to fail without blocking merges, while ensuring code quality and functionality.
+
+## Automated Checks
+
+Our CI pipeline runs comprehensive automated checks on every PR:
+- Linting to enforce code style
+- Type checking to catch type errors
+- Unit and integration tests to verify functionality
+- Build verification to ensure successful compilation
+- Security scans to detect vulnerabilities
+- Preview deployments for visual verification
+
+These automated checks catch many issues before human review, allowing reviewers to focus on logic, architecture, and maintainability.
+
+## Review Response Time
+
+We aim to provide initial feedback on pull requests within 24 hours. Timely reviews prevent work from piling up and keep developers productive. Reviewers prioritize PRs to maintain team velocity.
+
+When reviews require significant time, reviewers acknowledge the PR quickly and provide an estimated timeline for thorough review.
+
+## Review Focus Areas
+
+Reviewers focus on:
+- Correctness: Does the code do what it's supposed to?
+- Testing: Are there adequate tests for the changes?
+- Architecture: Does the implementation fit the existing design?
+- Maintainability: Is the code readable and maintainable?
+- Security: Are there potential security vulnerabilities?
+- Performance: Are there obvious performance issues?
+
+Reviewers don't nitpick style issues that automated tools should catch. They focus on substantive concerns that affect code quality and functionality.
+
+## Constructive Feedback
+
+Reviews provide constructive, specific feedback. Comments explain why changes are suggested and, when possible, provide examples or alternatives. Reviews are respectful and assume good intent.
+
+We distinguish between blocking issues that must be fixed and suggestions that could improve the code but aren't critical. This helps authors prioritize changes.
+
+## Handling Disagreements
+
+When reviewers and authors disagree, they discuss the issue synchronously (video call or in person) rather than through extended PR comment threads. This resolves disagreements faster and with less friction.
+
+If disagreements persist, we escalate to technical leads or team consensus through broader discussion.
+
+## Approving with Comments
+
+Reviewers can approve PRs with non-blocking suggestions. This enables merging while indicating areas for future improvement. Authors address blocking issues before merge and note non-blocking suggestions for follow-up work.
+
+## Preview Deployments
+
+We create preview deployments for every pull request. Preview deployments allow reviewers and stakeholders to interact with changes in a live environment. This catches issues that aren't apparent in code review.
+
+Preview URLs are automatically added to PR comments for easy access.
+
+## Post-Merge Responsibility
+
+Authors monitor deployments after merging to catch issues early. If problems arise, authors are responsible for fixing them promptly or reverting the PR.
+
+## Rules
+
+1. Minimum one reviewer required for AI-authored code
+2. CODEOWNERS approval required for human-authored code
+3. Code owners designated for specific directories/file patterns
+4. Maximum PR size is 500 lines changed
+5. Break larger changes into multiple logical PRs
+6. Each PR should be independently reviewable and deployable
+7. Use PR templates with checklists
+8. Include summary of changes in every PR
+9. Include testing instructions in every PR
+10. Include screenshots/videos for UI changes
+11. Link related issues in PR description
+12. Document breaking changes with migration instructions
+13. Require passing critical CI checks before merge
+14. Critical checks: linting, type checking, tests, build, security
+15. Allow non-critical checks to fail without blocking
+16. Run linting on all PRs
+17. Run type checking on all PRs
+18. Run tests on all PRs
+19. Verify builds succeed on all PRs
+20. Run security scans on all PRs
+21. Create preview deployments for all PRs
+22. Provide initial PR feedback within 24 hours
+23. Acknowledge PRs quickly when thorough review takes time
+24. Review for correctness, testing, architecture, maintainability, security, performance
+25. Don't nitpick style issues caught by automated tools
+26. Provide constructive, specific feedback
+27. Explain why changes are suggested
+28. Distinguish blocking issues from suggestions
+29. Resolve disagreements through synchronous discussion
+30. Escalate persistent disagreements to technical leads
+31. Approve with non-blocking suggestions when appropriate
+32. Address blocking issues before merge
+33. Note non-blocking suggestions for follow-up
+34. Include preview deployment URLs in PR comments
+35. Authors monitor deployments after merge
+36. Fix issues promptly or revert PR if problems arise
+37. Reviews are respectful and assume good intent
+38. Focus on substantive issues, not minor style

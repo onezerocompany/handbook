@@ -1,0 +1,138 @@
+---
+title: TanStack Dashboard Standards
+---
+
+## Overview
+
+TanStack-based dashboards at OneZero use React with TanStack Router, TanStack Query, and TanStack Table for building data-intensive admin interfaces and internal tools. This stack provides type-safe routing, powerful data fetching, and flexible table components. Our dashboards emphasize performance, real-time data, and excellent developer experience.
+
+## TanStack Router
+
+We use TanStack Router for type-safe, file-based routing. TanStack Router provides compile-time route validation, type-safe navigation, and search param schemas. Routes are defined in files with full TypeScript support throughout the navigation system.
+
+TanStack Router integrates seamlessly with TanStack Query for route-level data loading with automatic loading states and error boundaries. Data dependencies are declared at the route level, ensuring data is loaded before components render.
+
+## TanStack Query
+
+We use TanStack Query (React Query) for all server state management. TanStack Query handles caching, background refetching, optimistic updates, and request deduplication automatically. This eliminates significant boilerplate and makes data fetching predictable.
+
+Queries are defined with descriptive keys that enable precise cache invalidation. Mutations trigger relevant query invalidations to keep the UI synchronized with server state. We use optimistic updates for immediate user feedback during mutations.
+
+## TanStack Table
+
+We use TanStack Table for all data tables in dashboards. TanStack Table is headless and provides powerful features including sorting, filtering, pagination, column visibility, row selection, and virtualization. We build custom table UIs with TanStack Table's hooks and Tailwind CSS.
+
+Tables are fully typed with TypeScript, providing autocomplete and type checking for column definitions, data access, and table state. Large datasets use virtualization for performant rendering.
+
+## Framework Foundation
+
+Dashboards are built with React using functional components and hooks exclusively. We use Vite or Next.js as the build tool depending on whether server-side rendering is needed. Vite provides faster development and build times for client-only dashboards.
+
+## State Management
+
+Client state uses Zustand for global state that doesn't belong on the server. Server state is exclusively managed by TanStack Query, maintaining clear separation between client and server concerns. This prevents state synchronization issues and reduces complexity.
+
+## Forms and Validation
+
+We use React Hook Form for form handling with Zod for schema validation. Forms handle complex validation rules, nested fields, and field arrays efficiently. Validation happens on submission with clear, field-level error messages.
+
+Form state integrates with TanStack Query for server-side validation and optimistic updates during submission.
+
+## UI Components
+
+We use shadcn/ui for UI components. Shadcn provides accessible, customizable components built with Radix UI primitives and styled with Tailwind CSS. Components are copied into the project, allowing full customization without being locked into a component library.
+
+## Styling
+
+We use Tailwind CSS for all styling. Tailwind's utility-first approach enables rapid UI development with design consistency. We define custom design tokens in the Tailwind config for brand colors, spacing, and typography.
+
+## Authentication
+
+Dashboards implement authentication using JWT, session-based auth, or OAuth 2.0 depending on requirements. Authentication state is managed globally and protects routes through TanStack Router's route guards. Unauthenticated users are redirected to login.
+
+## Real-Time Updates
+
+We implement real-time updates through WebSockets or Server-Sent Events integrated with TanStack Query. Real-time events trigger query invalidations to refetch updated data. For frequent updates, we use optimistic updates or local state until background refetch completes.
+
+## Data Visualization
+
+We use charts and visualizations for data-heavy dashboards. Libraries like Recharts or Chart.js integrate well with React and TanStack Query's data fetching. Visualizations are responsive and accessible.
+
+## Performance
+
+We optimize performance through code splitting, lazy loading, virtualization for large lists and tables, and efficient re-rendering patterns. We use React's memoization (useMemo, useCallback) to prevent unnecessary recalculations.
+
+TanStack Query's automatic caching reduces server requests significantly. Stale-while-revalidate patterns show cached data immediately while fetching updates in the background.
+
+## Testing
+
+We use Jest for unit and integration tests, Playwright for end-to-end tests, and Testing Library for component tests. We test data fetching logic, table interactions, form submissions, and critical user flows.
+
+We maintain minimum 80% code coverage and practice TDD. Tests verify correct data loading, error handling, and user interactions.
+
+## Error Handling
+
+We implement comprehensive error boundaries for graceful error handling. TanStack Router provides route-level error boundaries that catch errors during data loading and component rendering. Error states are user-friendly with actionable recovery options.
+
+## Build and Deployment
+
+Dashboards deploy to Railway, Cloudflare, or other platforms supporting Node.js or static hosting. We use environment variables for configuration and feature flags for gradual feature rollouts.
+
+Preview deployments are created for pull requests, enabling visual testing before merging.
+
+## Rules
+
+1. Use TanStack Router for type-safe routing
+2. Use file-based routing with full TypeScript support
+3. Type-safe navigation and search param schemas
+4. Integrate TanStack Query for route-level data loading
+5. Declare data dependencies at route level
+6. Use TanStack Query for all server state management
+7. Leverage automatic caching, refetching, and deduplication
+8. Define queries with descriptive keys for cache invalidation
+9. Trigger query invalidations after mutations
+10. Use optimistic updates for immediate user feedback
+11. Use TanStack Table for all data tables
+12. Build custom table UIs with TanStack Table hooks and Tailwind
+13. Enable sorting, filtering, pagination, column visibility, row selection
+14. Use virtualization for large datasets
+15. Fully type tables with TypeScript
+16. Use React with functional components and hooks exclusively
+17. Use Vite for client-only dashboards, Next.js when SSR needed
+18. Use Zustand for client state
+19. Use TanStack Query exclusively for server state
+20. Maintain clear separation between client and server state
+21. Use React Hook Form for form handling
+22. Use Zod for form validation
+23. Validate on submission with field-level errors
+24. Integrate forms with TanStack Query for server validation
+25. Use shadcn/ui for UI components
+26. Components are accessible and built with Radix UI
+27. Use Tailwind CSS for styling
+28. Define custom design tokens in Tailwind config
+29. Implement authentication with JWT, sessions, or OAuth 2.0
+30. Protect routes through TanStack Router guards
+31. Redirect unauthenticated users to login
+32. Implement real-time updates through WebSockets or SSE
+33. Trigger query invalidations for real-time events
+34. Use optimistic updates or local state for frequent updates
+35. Use Recharts or Chart.js for data visualization
+36. Ensure visualizations are responsive and accessible
+37. Optimize with code splitting and lazy loading
+38. Use virtualization for large lists and tables
+39. Use useMemo and useCallback for memoization
+40. Leverage TanStack Query's automatic caching
+41. Use stale-while-revalidate patterns for instant UI updates
+42. Use Jest for unit and integration tests
+43. Use Playwright for end-to-end tests
+44. Use Testing Library for component tests
+45. Minimum 80% code coverage required
+46. Practice Test-Driven Development (TDD) strictly
+47. Test data fetching, table interactions, forms, and user flows
+48. Implement error boundaries at route level
+49. Provide user-friendly error states with recovery options
+50. Deploy to Railway, Cloudflare, or Node.js platforms
+51. Use environment variables for configuration
+52. Use feature flags for gradual rollouts
+53. Create preview deployments for pull requests
+54. Tests required for all new features and bug fixes

@@ -1,0 +1,132 @@
+---
+title: Rust Coding Standards
+---
+
+## Overview
+
+Rust is used at OneZero for systems programming and performance-critical services where memory safety and performance are paramount. We target the latest stable Rust version using the 2021 edition. Our Rust standards emphasize safety, zero-cost abstractions, and leveraging Rust's powerful type system.
+
+## Safety and Unsafe Code
+
+Rust's ownership system prevents entire classes of bugs at compile time. We avoid `unsafe` code unless absolutely necessary, such as when interfacing with C libraries or implementing low-level abstractions. Every `unsafe` block must be documented with clear justification explaining why it's needed and what invariants must be maintained.
+
+When `unsafe` is unavoidable, we minimize its scope and encapsulate it behind safe APIs. The goal is to isolate unsafe code so that the rest of the application benefits from Rust's safety guarantees.
+
+## Error Handling
+
+We use `Result<T, E>` with custom error types for all fallible operations. Rust's Result type makes error handling explicit in function signatures, preventing forgotten error checks. We use the `thiserror` crate for deriving error types and `anyhow` for application-level error handling where specific error types aren't needed.
+
+Error messages should be descriptive and provide context about what operation failed and why. We use the `?` operator for error propagation, which keeps code concise while maintaining the error chain.
+
+## Async Runtime
+
+We use Tokio as our async runtime for asynchronous operations. Tokio is the most mature and widely-used async runtime in the Rust ecosystem. It provides efficient task scheduling, async I/O, and a comprehensive set of utilities for building async applications.
+
+## Web Framework
+
+We use Axum for web services and APIs. Axum is built on Tokio and hyper, providing excellent performance and a type-safe, ergonomic API. It leverages Rust's type system to catch routing and handler errors at compile time.
+
+## Serialization
+
+We use serde for all serialization and deserialization needs. Serde provides powerful, type-safe serialization with support for JSON, YAML, TOML, and many other formats. Its derive macros make it effortless to serialize complex data structures.
+
+## Database Access
+
+We use SQLx for database operations. SQLx provides compile-time verification of SQL queries against the database schema, catching SQL errors before runtime. It supports async operations with Tokio and works well with PostgreSQL, MySQL, and SQLite.
+
+## Testing
+
+We use Rust's built-in testing framework with cargo test. Rust's testing approach is simple and integrated into the build tool. We write unit tests inline with code and integration tests in the `tests/` directory.
+
+We maintain minimum 80% code coverage and practice TDD. Rust's type system prevents many bugs, but tests are still essential for verifying business logic and edge cases.
+
+## Code Style and Linting
+
+We use rustfmt for code formatting and clippy for linting. Both are official Rust tools and are enforced in our CI pipeline. Clippy catches common mistakes and suggests idiomatic Rust patterns. We use clippy with strict lints enabled to maintain high code quality.
+
+Rustfmt is the standard Rust formatter and ensures consistent code style across the project. All code must be formatted with rustfmt before committing.
+
+## Package Management
+
+We use Cargo, Rust's built-in package manager and build tool. Cargo handles dependency management, compilation, testing, and documentation generation. The `Cargo.toml` and `Cargo.lock` files define dependencies and ensure reproducible builds.
+
+## Code Organization
+
+We organize code into modules following Rust's module system. Each file is a module, and we use `mod.rs` or the newer inline module syntax for nested modules. We prefer small, focused modules with clear responsibilities.
+
+We use public APIs sparingly, making most items private by default. This encapsulation prevents accidental coupling and makes refactoring easier.
+
+## Rules
+
+### Platform and Tooling
+
+1. Target latest stable Rust version
+2. Use Rust 2021 edition
+3. Use Cargo for package management and builds
+4. Commit Cargo.toml and Cargo.lock to version control
+5. Use rustfmt for code formatting
+6. Use clippy for linting
+7. Enable strict clippy lints
+8. All code must be rustfmt'd before commit
+9. 2-space indentation required
+10. 120-character line limit
+
+### Safety and Unsafe Code
+
+11. Avoid `unsafe` code unless absolutely necessary
+12. Document and justify all unsafe blocks with clear explanations
+13. Minimize scope of unsafe code and encapsulate behind safe APIs
+
+### Error Handling
+
+14. Use Result<T, E> with custom errors for all fallible operations
+15. Use thiserror for deriving error types
+16. Use anyhow for application-level error handling
+17. Error messages must be descriptive with clear context
+18. Use `?` operator for error propagation
+
+### Async Runtime
+
+19. Use Tokio as async runtime
+
+### Web Framework
+
+20. Use Axum for web services and APIs
+
+### Serialization
+
+21. Use serde for serialization and deserialization
+
+### Database Access
+
+22. Use SQLx for database operations
+23. Leverage SQLx's compile-time SQL verification
+
+### Testing
+
+24. Use Rust's built-in testing framework (cargo test)
+25. Unit tests inline with code, integration tests in tests/
+26. Minimum 80% code coverage required
+27. Practice Test-Driven Development (TDD) strictly
+28. Tests required for all new code and bug fixes
+29. Follow Arrange-Act-Assert (AAA) pattern in tests
+30. Minimal mocking in tests - prefer real implementations
+
+### Code Organization
+
+31. Organize code into focused modules
+32. Make most items private by default
+
+### Naming Conventions
+
+33. Use snake_case for variables, functions, and modules
+34. Use PascalCase for types and traits
+35. Use SCREAMING_SNAKE_CASE for constants
+36. Boolean variables should be descriptive without prefixes (active, permitted)
+37. Maximum function length is 50 lines
+
+### Documentation
+
+38. Documentation comments (///) required for complex functions
+39. Include parameter and return documentation for documented functions
+40. No TODO/FIXME/HACK comments - use issue tracker

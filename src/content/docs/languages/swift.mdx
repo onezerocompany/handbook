@@ -1,0 +1,113 @@
+---
+title: Swift Coding Standards
+---
+
+## Overview
+
+Swift is used for OneZero's native iOS development, exclusively with SwiftUI for user interfaces. We target the latest stable Swift version and support iOS versions from latest minus 2 (currently iOS 16+). Our Swift standards emphasize safety, modern concurrency, and protocol-oriented programming.
+
+## Optionals and Safety
+
+Swift's optional system is one of its strongest features for preventing null pointer errors. We avoid force unwrapping (`!`) in all cases, as it can cause runtime crashes. Instead, we use optional binding, optional chaining, and guard statements to handle optionals safely.
+
+We prefer `guard let` over `if let` for optional unwrapping when early returns make sense. Guard statements keep the happy path unindented and make the code flow more linear and readable. This pattern also ensures that unwrapped values are available in the same scope after the guard.
+
+## Concurrency
+
+We use Swift's modern concurrency features with async/await exclusively. This approach is safer and more readable than completion handlers or combine publishers for asynchronous operations. Swift's actor model provides thread-safe state management without manual locking.
+
+## Protocol-Oriented Programming
+
+We extensively use protocols and protocol-oriented programming patterns. Protocols define contracts for types and enable flexible, testable code through dependency injection. Protocol extensions provide default implementations and reduce code duplication.
+
+## Architecture
+
+We follow the MVVM (Model-View-ViewModel) architecture pattern with SwiftUI. ViewModels manage state and business logic, while Views remain simple and declarative. This separation improves testability and makes the codebase more maintainable.
+
+We use property wrappers like `@Environment`, `@EnvironmentObject`, and `@StateObject` for dependency injection and state management. These built-in mechanisms work seamlessly with SwiftUI's reactive update system.
+
+## Data Persistence
+
+For local data persistence, we use SwiftData and SQLite. SwiftData provides a modern, Swift-native approach to data modeling with automatic persistence. SQLite serves as a reliable fallback for more complex queries or when direct SQL access is needed.
+
+## Networking
+
+We use the native URLSession for all networking operations. URLSession is robust, well-tested, and provides everything needed for modern HTTP communication without additional dependencies. We leverage async/await with URLSession's modern API for clean, sequential code.
+
+## Testing
+
+We use Swift Testing (the new framework introduced in Swift 5.9+) for all test scenarios. Tests should cover unit tests, integration tests, and where applicable, UI tests. We maintain high test coverage and follow TDD practices.
+
+## Project Organization
+
+We organize our Xcode projects by feature or module rather than by type. This means grouping related views, view models, and models together instead of having separate folders for all views, all models, etc. This structure improves discoverability and makes features more self-contained.
+
+## Code Style
+
+We use SwiftLint with the default configuration to enforce code style. The linter runs automatically in our pre-commit hooks and CI pipeline. We use 2-space indentation and follow Swift's standard naming conventions.
+
+## Package Management
+
+We use Swift Package Manager (SPM) exclusively for dependency management. SPM is native to the Swift toolchain, well-integrated with Xcode, and provides reliable dependency resolution.
+
+## Rules
+
+### Platform and Tooling
+
+1. Target latest stable Swift version
+2. Support minimum iOS version of latest - 2 (currently iOS 16)
+3. Use Swift Package Manager (SPM) exclusively
+4. Use SwiftLint with default configuration
+5. 2-space indentation required
+
+### Optionals and Safety
+
+6. Never use force unwrapping (`!`)
+7. Prefer `guard let` over `if let` for optional unwrapping
+
+### Concurrency
+
+8. Use async/await for all asynchronous operations
+9. Leverage actor model for thread-safe state management
+
+### Architecture and UI
+
+10. Use SwiftUI exclusively for UI development
+11. Follow MVVM architecture pattern strictly
+12. Use `@Environment` and property wrappers for dependency injection
+13. Organize Xcode project by feature/module, not by type
+
+### Protocol-Oriented Programming
+
+14. Use protocols extensively for abstraction and testability
+
+### Data Persistence
+
+15. Use SwiftData for primary data persistence
+16. Use SQLite for complex query requirements
+
+### Networking
+
+17. Use URLSession (native) for all networking
+
+### Testing
+
+18. Use Swift Testing framework for all tests
+19. Minimum 80% code coverage required
+20. Practice Test-Driven Development (TDD) strictly
+21. Tests must cover unit, integration, and UI scenarios where applicable
+
+### Naming Conventions
+
+22. Follow snake_case for variables and functions
+23. Use PascalCase for types and protocols
+24. Use SCREAMING_SNAKE_CASE for constants
+25. Boolean variables should be descriptive without prefixes (active, permitted)
+26. Maximum function length is 50 lines
+
+### Configuration and Documentation
+
+27. Build configurations used for environment management (Debug/Release)
+28. JSDoc-style documentation required for complex functions only
+29. Include parameter and return documentation for documented functions
+30. No TODO/FIXME/HACK comments - use issue tracker

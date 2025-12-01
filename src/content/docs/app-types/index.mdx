@@ -1,0 +1,53 @@
+---
+title: App Types
+description: Standards and best practices for each type of application we build at OneZero.
+tableOfContents: false
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Each application type has specific patterns, tooling, and architectural decisions that optimize for its use case. These guides ensure consistency across projects of the same type.
+
+<CardGrid stagger>
+  <Card title="Hono API" icon="rocket">
+    Backend framework for REST and tRPC APIs. Lightweight, fast, and works across Node.js, Bun, and edge environments.
+
+    [View Hono API Standards →](/app-types/hono-api/)
+  </Card>
+
+  <Card title="Expo App" icon="apple">
+    Preferred framework for cross-platform mobile development. iOS, Android, and web from a single codebase.
+
+    [View Expo App Standards →](/app-types/expo-app/)
+  </Card>
+
+  <Card title="Flutter App" icon="seti:dart">
+    Cross-platform mobile when not using Expo. Native performance on iOS and Android with reactive state management.
+
+    [View Flutter App Standards →](/app-types/flutter-app/)
+  </Card>
+
+  <Card title="Native iOS (SwiftUI)" icon="seti:swift">
+    Native iOS development with SwiftUI. Platform conventions, smooth animations, and deep system integration.
+
+    [View iOS Standards →](/app-types/native-ios-swiftui/)
+  </Card>
+
+  <Card title="Native Android (Kotlin + Compose)" icon="seti:kotlin">
+    Native Android with Jetpack Compose. Material Design, reactive programming, and platform integration.
+
+    [View Android Standards →](/app-types/native-android-kotlin-compose/)
+  </Card>
+
+  <Card title="Astro Website" icon="astro">
+    Content-focused websites, marketing pages, and documentation. Islands architecture with minimal JavaScript.
+
+    [View Astro Standards →](/app-types/astro-website/)
+  </Card>
+
+  <Card title="TanStack Dashboard" icon="laptop">
+    Data-intensive admin interfaces and internal tools. Type-safe routing, powerful data fetching, and flexible tables.
+
+    [View Dashboard Standards →](/app-types/tanstack-dashboard/)
+  </Card>
+</CardGrid>

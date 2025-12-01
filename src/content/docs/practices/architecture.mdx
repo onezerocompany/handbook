@@ -1,0 +1,227 @@
+---
+title: Architecture & Design Patterns Standards
+---
+
+## Overview
+
+Architecture and design patterns provide structure and consistency to OneZero's codebases. We follow proven patterns that make code maintainable, testable, and scalable. Our architecture standards emphasize modularity, separation of concerns, and appropriate abstraction levels.
+
+## SOLID Principles
+
+We follow SOLID principles strictly:
+- **Single Responsibility Principle**: Each module or class has one reason to change
+- **Open/Closed Principle**: Open for extension, closed for modification
+- **Liskov Substitution Principle**: Subtypes must be substitutable for their base types
+- **Interface Segregation Principle**: Many specific interfaces are better than one general-purpose interface
+- **Dependency Inversion Principle**: Depend on abstractions, not concretions
+
+These principles guide architectural decisions and code organization, leading to more maintainable and flexible systems.
+
+## Project Structure
+
+We prefer layer-based project structure organized by technical concerns: components, services, models, utilities. This approach is intuitive and scales well for most applications.
+
+Directories are organized as:
+- `components/` for UI components
+- `services/` for business logic and external integrations
+- `models/` or `types/` for data structures
+- `utils/` or `lib/` for shared utilities
+- `hooks/` for React hooks or similar reusable logic
+
+Within each layer, we group related functionality together. Services are organized by domain (user service, payment service), and components are organized by feature or page.
+
+## Monorepo Strategy
+
+We use Turborepo for monorepo management. Monorepos enable code sharing, coordinated changes across packages, and simplified dependency management. Turborepo provides fast, efficient builds with intelligent caching.
+
+Monorepos are structured with:
+- `apps/` for deployable applications
+- `packages/` for shared libraries and utilities
+- Shared configuration files at the root
+
+Each package has clear ownership and dependencies. We avoid circular dependencies between packages.
+
+## State Management
+
+We use Zustand for client-side global state. Zustand provides minimal boilerplate, excellent TypeScript support, and middleware for persistence and devtools. State is organized into focused stores rather than one massive global store.
+
+For server state, we use React Query (TanStack Query) exclusively. React Query handles caching, background updates, and request deduplication. This separation between client state (Zustand) and server state (React Query) keeps concerns clear.
+
+## Data Fetching
+
+We use React Query (TanStack Query) for all data fetching. React Query provides:
+- Automatic background refetching
+- Request deduplication
+- Caching with configurable invalidation
+- Loading and error state management
+- Optimistic updates
+
+Data fetching is centralized in hooks or service functions. We avoid spreading fetch calls throughout components.
+
+## Design Patterns
+
+We commonly use these design patterns:
+
+**Factory Pattern**: Creates objects without specifying exact classes. Useful for dependency injection and creating variations of objects based on configuration.
+
+**Observer Pattern**: Implements subscription mechanisms for state changes. Used extensively in reactive frameworks and event-driven architectures.
+
+**Repository Pattern**: Abstracts data access behind interfaces. Repositories provide a collection-like interface for domain objects, hiding database implementation details.
+
+**Dependency Injection**: Provides dependencies from outside rather than creating them internally. Makes code testable and loosely coupled.
+
+**Middleware Pattern**: Provides hooks into request/response pipelines. Used in HTTP servers, state management, and event processing.
+
+## Module Organization
+
+We organize imports automatically using tools like Biome or Prettier. Import organization typically groups:
+1. External dependencies (npm packages)
+2. Internal packages (monorepo packages)
+3. Relative imports
+
+Auto-sorting prevents import order bikeshedding and maintains consistency.
+
+## Barrel Files
+
+We use barrel files (index.ts) only for public APIs. Barrel files export selected items from a directory, defining what's public versus private. This prevents consumers from depending on internal implementation details.
+
+We avoid barrel files for internal module organization as they can create circular dependencies and complicate refactoring.
+
+## File Length Limits
+
+There is no strict file length limit. We bundle code by domain and split files when they exceed 1000 lines or when cohesion suffers. The goal is maintainability, not arbitrary line counts.
+
+Large files are acceptable when they're cohesive and well-organized. We split files when they contain multiple unrelated concerns or become difficult to navigate.
+
+## Function Length Limits
+
+Functions should not exceed 50 lines. Long functions are difficult to understand and test. We extract complex logic into smaller, named functions that communicate intent clearly.
+
+Smaller functions are easier to test in isolation, reuse, and reason about. They make code self-documenting when named well.
+
+## Abstraction Levels
+
+We avoid over-engineering and premature abstraction. We don't create helpers, utilities, or abstractions for one-time operations. Three similar pieces of code indicate a need for abstraction, but duplicate code is better than the wrong abstraction.
+
+We design for current requirements, not hypothetical future requirements. YAGNI (You Aren't Gonna Need It) prevents unnecessary complexity.
+
+## Code Comments
+
+Code should be self-explanatory through clear naming and structure. We use inline comments only for complex logic that isn't obvious from the code itself.
+
+We encourage comments that explain "why" rather than "what." The code shows what it does; comments explain reasoning behind non-obvious decisions.
+
+JSDoc comments document complex functions with parameter and return value descriptions. Documentation comments are generated into API documentation.
+
+## Error Handling
+
+We use custom error classes for domain-specific errors. Error classes categorize errors and provide context. This enables appropriate error handling at different application layers.
+
+Try-catch blocks handle errors locally when recovery is possible. Errors bubble up when local recovery isn't appropriate. We avoid swallowing errors silently.
+
+## Naming Conventions
+
+Names are descriptive and communicate intent. We prefer longer, clear names over short, cryptic names. Modern IDEs provide autocomplete, so brevity isn't necessary.
+
+Naming follows language and framework conventions:
+- snake_case for variables and functions
+- PascalCase for classes and types
+- SCREAMING_SNAKE_CASE for constants
+- kebab-case for CSS classes and API endpoints
+
+## Code Duplication
+
+Small amounts of duplication are acceptable. We don't create abstractions for two similar pieces of code. We wait until the third instance to create a reusable abstraction.
+
+The wrong abstraction is more expensive than duplication. Abstractions should emerge from real needs, not hypothetical reuse.
+
+## Rules
+
+### SOLID Principles
+
+1. Follow SOLID principles strictly in all code
+2. Apply Single Responsibility Principle (one reason to change)
+3. Apply Open/Closed Principle (open for extension, closed for modification)
+4. Apply Liskov Substitution Principle (subtypes substitutable)
+5. Apply Interface Segregation Principle (specific interfaces over general)
+6. Apply Dependency Inversion Principle (depend on abstractions)
+
+### Project Structure
+
+7. Use layer-based project structure (components/, services/, models/)
+8. Organize services by domain
+9. Organize components by feature or page
+
+### Monorepo Strategy
+
+10. Use Turborepo for monorepo management
+11. Structure monorepos with apps/ and packages/
+12. Avoid circular dependencies between packages
+
+### State Management
+
+13. Use Zustand for client-side global state
+14. Use React Query for server state exclusively
+15. Separate client state from server state
+
+### Data Fetching
+
+16. Use React Query for all data fetching
+17. Centralize data fetching in hooks or service functions
+
+### Design Patterns
+
+18. Use Factory pattern for object creation with variations
+19. Use Observer pattern for subscription mechanisms
+20. Use Repository pattern to abstract data access
+21. Use Dependency Injection for loose coupling
+22. Use Middleware pattern for request/response pipelines
+
+### Module Organization
+
+23. Auto-sort imports using Biome or Prettier
+24. Group imports: external, internal packages, relative
+25. Use barrel files (index.ts) only for public APIs
+26. Avoid barrel files for internal organization
+
+### File and Function Organization
+
+27. No strict file length limit - split above 1000 lines when cohesion suffers
+28. Keep files cohesive and well-organized
+29. Split files when they contain unrelated concerns
+30. Maximum function length is 50 lines
+31. Extract complex logic into smaller, named functions
+32. Make functions testable in isolation
+
+### Abstraction Guidelines
+
+33. Avoid over-engineering and premature abstraction
+34. Don't create abstractions for one-time operations
+35. Three similar instances indicate abstraction need
+36. Duplicate code acceptable over wrong abstraction
+37. Design for current requirements, not hypothetical future (YAGNI)
+
+### Code Comments
+
+38. Code should be self-explanatory through clear naming
+39. Use inline comments only for complex, non-obvious logic
+40. Comments explain "why" not "what"
+41. JSDoc comments for complex functions with param/return docs
+
+### Error Handling
+
+42. Use custom error classes for domain-specific errors
+43. Try-catch handles errors when local recovery possible
+44. Let errors bubble up when local recovery inappropriate
+45. Never swallow errors silently
+
+### Naming Conventions
+
+46. Names are descriptive and communicate intent
+47. Prefer clear names over short names
+48. Follow language-specific naming conventions
+
+### Code Duplication
+
+49. Small duplication acceptable - don't abstract before third instance
+50. Wrong abstraction more expensive than duplication

@@ -1,0 +1,151 @@
+---
+title: Database Standards
+---
+
+## Overview
+
+Databases are critical infrastructure for OneZero applications. We primarily use PostgreSQL for production data storage and SQLite for local development and testing. Our database standards ensure data integrity, performance, and maintainability.
+
+## Database Selection
+
+PostgreSQL is our primary production database. PostgreSQL provides robust features, excellent performance, strong data integrity guarantees, and comprehensive querying capabilities. It handles structured data, JSON documents, full-text search, and geospatial data.
+
+SQLite is used exclusively for local development and testing. SQLite is lightweight, requires no server setup, and provides excellent developer experience for local workflows. It's not used in production due to concurrency limitations.
+
+## ORM and Query Builder
+
+We use Drizzle as our primary ORM and query builder. Drizzle provides type-safe queries with excellent TypeScript integration and minimal runtime overhead. It generates SQL that's easy to understand and optimize.
+
+Drizzle's schema definitions serve as the source of truth for database structure. The schema is version-controlled and used to generate migrations.
+
+## Database Migrations
+
+Database migrations are version-controlled and managed through ORM migration tools. Drizzle, Prisma, or Alembic (for Python) generate migration files that are reviewed like application code.
+
+Migrations are applied automatically during deployment. Each migration is tested in development and staging before production to ensure it works correctly and doesn't cause downtime.
+
+We write migrations that are backward-compatible when possible. This means migrations work with both the old and new application code during deployment, enabling zero-downtime deployments.
+
+## Schema Design
+
+Database schemas are normalized to reduce redundancy and ensure data integrity. We use appropriate constraints (NOT NULL, UNIQUE, FOREIGN KEY, CHECK) to enforce data rules at the database level.
+
+Indexes are added based on query analysis rather than upfront speculation. We profile queries, identify slow operations, and add indexes strategically to improve performance without excessive overhead.
+
+## Soft Deletes
+
+Soft delete strategy depends on data type and business requirements. Some data uses soft deletes (marking records as deleted without removing them) to maintain history and enable recovery. Other data uses hard deletes (permanent removal) when retention isn't needed.
+
+We decide soft versus hard delete based on:
+- Regulatory requirements for data retention
+- Business need for audit trails
+- Recovery requirements
+- Storage considerations
+
+## Data Seeding
+
+Seed data for development and testing is stored in version-controlled seed files. Seeds provide consistent starting data for development and testing environments.
+
+Seed scripts are idempotent, meaning they can run multiple times without creating duplicate data or errors. This allows developers to reset databases to known states easily.
+
+Production databases are never seeded automatically. Production data comes from user activity and explicit data migrations.
+
+## Indexing Strategy
+
+We add indexes based on query analysis. Development proceeds with minimal indexes, then we profile queries to identify slow operations. Indexes are added strategically where they provide measurable performance improvement.
+
+Over-indexing slows writes and increases storage overhead. We balance read performance with write performance based on application usage patterns.
+
+Common indexing scenarios:
+- Foreign keys used in joins
+- Columns used in WHERE clauses frequently
+- Columns used in ORDER BY clauses
+- Composite indexes for multi-column queries
+
+## Query Performance
+
+We optimize query performance through proper indexing, efficient query design, and avoiding N+1 queries. ORMs provide eager loading and query optimization features to prevent common performance issues.
+
+We use database query analysis tools (EXPLAIN in PostgreSQL) to understand query performance and identify bottlenecks.
+
+## Transactions
+
+We use transactions for operations that must be atomic. Transactions ensure multiple database operations succeed or fail together, maintaining data consistency.
+
+ORMs provide transaction APIs that handle connection management and error rollback automatically. We wrap related operations in transactions appropriately.
+
+## Connection Pooling
+
+Database connection pools reuse connections efficiently. ORMs and database libraries include connection pooling by default. We configure pool sizes based on application concurrency requirements and database capacity.
+
+## Data Validation
+
+Data validation happens at multiple layers:
+- Application layer validates business rules using Zod or similar
+- Database layer enforces constraints using NOT NULL, FOREIGN KEY, CHECK constraints
+- ORM layer validates types and relationships
+
+This defense-in-depth approach ensures data integrity even if one validation layer fails.
+
+## Backup and Recovery
+
+Database backups are automated through platform-specific backup systems (Railway automated backups, GCP Cloud SQL backups). We test restoration procedures regularly to ensure backups are functional.
+
+Point-in-time recovery enables restoring databases to specific moments, minimizing data loss in disaster scenarios.
+
+## Database Naming Conventions
+
+Database tables and columns use snake_case naming. This aligns with SQL conventions and provides consistency across the stack.
+
+Table names are plural (users, posts, comments). Column names are singular and descriptive. Foreign key columns use `{table}_id` format (user_id, post_id).
+
+## Schema Versioning
+
+Database schema version is tracked in the database through migration tables. Migration tools automatically manage schema versions and ensure migrations apply in correct order.
+
+## Rules
+
+1. Use PostgreSQL as primary production database
+2. Use SQLite exclusively for local development and testing
+3. Never use SQLite in production
+4. Use Drizzle as primary ORM and query builder
+5. Define database schemas in ORM schema files
+6. Version-control schema definitions
+7. Version-control database migrations
+8. Review migrations like application code
+9. Apply migrations automatically during deployment
+10. Test migrations in development and staging before production
+11. Write backward-compatible migrations when possible
+12. Normalize database schemas to reduce redundancy
+13. Use constraints (NOT NULL, UNIQUE, FOREIGN KEY, CHECK)
+14. Enforce data rules at database level
+15. Add indexes based on query analysis, not speculation
+16. Profile queries to identify slow operations
+17. Use soft deletes or hard deletes based on data type and requirements
+18. Decide deletion strategy based on retention needs and regulations
+19. Store seed data in version-controlled files
+20. Make seed scripts idempotent
+21. Never seed production databases automatically
+22. Add indexes where they provide measurable performance improvement
+23. Balance read and write performance with indexing
+24. Index foreign keys used in joins
+25. Index columns used in WHERE and ORDER BY clauses
+26. Use composite indexes for multi-column queries
+27. Optimize queries through proper indexing and design
+28. Avoid N+1 queries with eager loading
+29. Use EXPLAIN to analyze query performance
+30. Use transactions for atomic operations
+31. Wrap related operations in transactions
+32. Use ORM transaction APIs
+33. Configure connection pools based on concurrency and capacity
+34. Validate data at application, ORM, and database layers
+35. Automate database backups through platform systems
+36. Test restoration procedures regularly
+37. Enable point-in-time recovery
+38. Use snake_case for table and column names
+39. Use plural table names (users, posts)
+40. Use singular, descriptive column names
+41. Use {table}_id format for foreign keys
+42. Track schema version through migration tables
+43. Let migration tools manage schema versions
+44. Apply migrations in correct order automatically

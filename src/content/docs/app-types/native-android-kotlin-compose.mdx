@@ -1,0 +1,136 @@
+---
+title: Native Android (Kotlin + Compose) Standards
+---
+
+## Overview
+
+Native Android development at OneZero uses Kotlin with Jetpack Compose for UI. We target the latest stable Kotlin version and support a minimum Android API level 31 (Android 12). Our Android apps emphasize Material Design, reactive programming, and deep Android platform integration.
+
+## Jetpack Compose
+
+Jetpack Compose is our exclusive UI framework for Android development. Compose provides declarative, reactive UI development with excellent Kotlin integration. We leverage Compose's state management, composition, and theming capabilities.
+
+All UI is built using Compose composables. We avoid mixing XML layouts with Compose. When interoperability with View-based components is necessary, we use AndroidView or similar interop mechanisms.
+
+## Architecture
+
+We follow MVVM architecture with Android's ViewModel component. ViewModels survive configuration changes (like screen rotation) and provide a clean separation between UI and business logic. ViewModels expose state as StateFlow or other observable types that Compose observes reactively.
+
+ViewModels should not hold references to contexts, views, or other lifecycle-aware components. This prevents memory leaks and keeps business logic independent of Android framework components.
+
+## State Management
+
+We use Compose's state management with `remember`, `rememberSaveable`, and state hoisting. State is lifted to the appropriate level in the composable hierarchy. We use ViewModel state for data that survives configuration changes and local state for ephemeral UI state.
+
+State flows down from ViewModels to composables, and events flow up through callbacks. This unidirectional data flow makes state changes predictable and debugging easier.
+
+## Dependency Injection
+
+We use Hilt for dependency injection throughout the application. Hilt provides compile-time verification, automatic lifecycle management, and seamless integration with Android components including ViewModels, Activities, and Services.
+
+Dependencies are injected through constructors, making them explicit and testable. Hilt modules define how dependencies are created and what scope they have.
+
+## Data Persistence
+
+We use Room Database for structured data persistence and DataStore for key-value storage and preferences. Room provides compile-time SQL verification, type-safe queries, and excellent coroutines integration. DataStore replaces SharedPreferences with a more robust, async-first API.
+
+Database entities use data classes with Room annotations. We use DAOs (Data Access Objects) to abstract database operations and provide a clean API for the repository layer.
+
+## Networking
+
+We use Ktor Client and Retrofit for networking. Ktor is preferred for new code due to its Kotlin-first design and coroutines support. Retrofit remains in use for existing integrations and when its ecosystem provides specific benefits.
+
+Network responses are handled with kotlinx.serialization or Gson for JSON parsing. We validate responses and handle errors with sealed classes representing success and failure states.
+
+## Navigation
+
+We use Navigation Compose for handling navigation between screens. Navigation Compose provides type-safe arguments, deep linking support, and proper integration with the back stack. Navigation graphs are defined programmatically or declaratively.
+
+We centralize navigation logic in navigation handlers or ViewModels to keep composables focused on UI and make navigation testable.
+
+## Material Design
+
+We follow Material Design 3 guidelines for all UI components. Compose provides Material 3 components out of the box. We customize theming using MaterialTheme to match brand requirements while maintaining Material Design principles.
+
+Dynamic color is supported where appropriate, adapting to user wallpapers on Android 12+. We support both light and dark themes comprehensively.
+
+## Concurrency
+
+We use Kotlin Coroutines for all asynchronous operations. Coroutines provide structured concurrency that's easier to reason about than callbacks or threads. We launch coroutines in appropriate scopes (`viewModelScope`, `lifecycleScope`) to ensure automatic cancellation.
+
+Flow is used for reactive streams of data. We use StateFlow for state that should survive configuration changes and SharedFlow for events.
+
+## Testing
+
+We use JUnit 5 for unit tests, Espresso for traditional UI tests, and Compose UI Testing for Compose-specific tests. We test ViewModels, repositories, and business logic with unit tests. UI tests verify complete user interactions.
+
+We maintain minimum 80% code coverage and practice TDD strictly. Tests are required for all new features and bug fixes.
+
+## Build Configuration
+
+We use Gradle with Kotlin DSL for build configuration. Gradle version catalogs centrally manage all dependencies, ensuring version consistency across modules and making updates easier.
+
+Build types (debug, release) and product flavors handle environment-specific configuration. We use build configuration fields and resources for environment-specific values.
+
+## Performance
+
+We optimize performance through lazy composition, efficient state management, and profiling. Compose's lazy layouts (LazyColumn, LazyRow) defer composition until items are visible. We use derivedStateOf to optimize state calculations.
+
+We profile regularly with Android Studio Profiler to identify performance bottlenecks, memory leaks, and unnecessary recompositions.
+
+## Platform Integration
+
+We integrate with Android platform features: widgets, notifications, shortcuts, work manager, and system services. These integrations leverage Android's unique capabilities and make our apps feel native.
+
+## Rules
+
+1. Use Jetpack Compose exclusively for all UI development
+2. No XML layouts - use Compose for all UI
+3. Use AndroidView for View-based component interoperability when necessary
+4. Follow MVVM architecture with Android ViewModel
+5. ViewModels must survive configuration changes
+6. ViewModels expose state as StateFlow or observable types
+7. ViewModels must not hold references to contexts, views, or lifecycle components
+8. Use remember, rememberSaveable, and state hoisting for state management
+9. Lift state to appropriate level in composable hierarchy
+10. Use ViewModel state for persistent data, local state for ephemeral UI state
+11. Implement unidirectional data flow (state down, events up)
+12. Use Hilt for dependency injection
+13. Inject dependencies through constructors
+14. Define Hilt modules for dependency creation and scoping
+15. Use Room Database for structured data persistence
+16. Use DataStore for key-value storage and preferences
+17. Room entities must be data classes with annotations
+18. Use DAOs to abstract database operations
+19. Use Ktor Client for new networking code
+20. Retrofit allowed for existing integrations
+21. Handle responses with kotlinx.serialization or Gson
+22. Use sealed classes for success/failure states
+23. Use Navigation Compose for navigation
+24. Provide type-safe navigation arguments
+25. Support deep linking
+26. Centralize navigation logic in handlers or ViewModels
+27. Follow Material Design 3 guidelines
+28. Customize MaterialTheme for brand requirements
+29. Support dynamic color on Android 12+
+30. Support light and dark themes comprehensively
+31. Use Kotlin Coroutines for all async operations
+32. Launch coroutines in viewModelScope or lifecycleScope
+33. Use Flow for reactive data streams
+34. Use StateFlow for persistent state, SharedFlow for events
+35. Use JUnit 5 for unit tests
+36. Use Espresso for traditional UI tests
+37. Use Compose UI Testing for Compose-specific tests
+38. Minimum 80% code coverage required
+39. Practice Test-Driven Development (TDD) strictly
+40. Tests required for all new features and bug fixes
+41. Use Gradle with Kotlin DSL for build configuration
+42. Use Gradle version catalogs for dependency management
+43. Use build types and product flavors for environment configuration
+44. Optimize with lazy composition and efficient state management
+45. Use LazyColumn and LazyRow for lists
+46. Use derivedStateOf for optimized state calculations
+47. Profile regularly with Android Studio Profiler
+48. Integrate with Android platform features (widgets, notifications, work manager)
+49. Target latest stable Kotlin version
+50. Support minimum Android API 31 (Android 12)

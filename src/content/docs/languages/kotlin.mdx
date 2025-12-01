@@ -1,0 +1,123 @@
+---
+title: Kotlin Coding Standards
+---
+
+## Overview
+
+Kotlin is used for OneZero's native Android development with Jetpack Compose for UI. We target the latest stable Kotlin version and support a minimum Android API level of 31 (Android 12). Our Kotlin standards emphasize null safety, coroutines for concurrency, and modern Android development practices.
+
+## Null Safety
+
+Kotlin's null safety is a core feature that prevents null pointer exceptions at compile time. We never use force unwrapping (`!!`) as it bypasses this safety mechanism and can cause crashes. Instead, we prefer safe calls (`?.`), the elvis operator (`?:`), and proper null checking.
+
+Safe calls allow us to chain operations on nullable values without risk of crashes. The elvis operator provides elegant fallback values for null cases. When we need to work with nullable values, we use `let`, `also`, or other scope functions to handle them safely.
+
+## Coroutines and Concurrency
+
+We use Kotlin Coroutines with Flow for all asynchronous operations. Coroutines provide structured concurrency that's easier to reason about than callbacks or threads. Flow offers reactive streams that integrate seamlessly with Compose's state management.
+
+Coroutines are launched in appropriate scopes (`viewModelScope`, `lifecycleScope`) to ensure they're automatically cancelled when no longer needed. This prevents memory leaks and unnecessary background work.
+
+## Architecture
+
+We follow the MVVM (Model-View-ViewModel) architecture pattern with Android's ViewModel component. ViewModels survive configuration changes and provide a clean separation between UI and business logic. This pattern is the recommended approach for modern Android development.
+
+## Dependency Injection
+
+We use Hilt for dependency injection throughout the application. Hilt provides compile-time verification of dependencies, automatic lifecycle management, and integrates seamlessly with Android components. This reduces boilerplate and makes testing easier through constructor injection.
+
+## UI Development
+
+We use Jetpack Compose exclusively for UI development. Compose provides a declarative, reactive approach to building UIs that's more concise and maintainable than XML layouts. We follow Compose's state management patterns with `remember`, `rememberSaveable`, and state hoisting.
+
+## Navigation
+
+We use Navigation Compose for handling navigation between screens. This provides type-safe navigation arguments, deep linking support, and integration with the back stack. Navigation logic is centralized and testable.
+
+## Data Persistence
+
+For local data persistence, we use Room Database as our primary solution, with DataStore for key-value storage and preferences. Room provides compile-time verification of SQL queries and seamless integration with coroutines and Flow.
+
+## Networking
+
+We use Ktor Client and Retrofit for networking operations. Ktor is preferred for new services due to its Kotlin-first design and coroutines support, while Retrofit remains in use for existing integrations. Both libraries integrate well with coroutines for async operations.
+
+## Testing
+
+We use JUnit 5 for unit tests, Espresso for UI testing, and Compose UI Testing for Compose-specific tests. We maintain a minimum 80% code coverage and practice TDD. Tests are required for all new code and bug fixes.
+
+## Code Style and Linting
+
+We use ktlint and detekt for code style enforcement and static analysis. These tools run in pre-commit hooks and CI pipelines. We follow Kotlin's official coding conventions with 2-space indentation.
+
+## Build Configuration
+
+We use Gradle with Kotlin DSL for build configuration. Gradle version catalogs manage all dependencies centrally, ensuring version consistency across modules. This approach reduces duplication and makes dependency updates easier.
+
+## Rules
+
+### Platform and Tooling
+
+1. Target latest stable Kotlin version
+2. Support minimum Android API level 31 (Android 12)
+3. Use Gradle with Kotlin DSL for build configuration
+4. Use Gradle version catalogs for all dependencies
+5. Use ktlint for code formatting
+6. Use detekt for static analysis
+7. 2-space indentation required
+8. Do not use Kotlin Multiplatform (KMP) - use Expo and Flutter instead
+
+### Null Safety
+
+9. Never use force unwrapping (`!!`)
+10. Prefer safe calls (`?.`) for nullable operations
+
+### Concurrency
+
+11. Use Kotlin Coroutines with Flow for all async operations
+12. Launch coroutines in appropriate scopes (viewModelScope, lifecycleScope)
+
+### Architecture and UI
+
+13. Use Jetpack Compose exclusively for UI development
+14. Follow MVVM architecture with ViewModel component
+15. Follow Compose state management patterns
+16. Use Hilt for dependency injection
+
+### Navigation
+
+17. Use Navigation Compose for navigation
+
+### Data Persistence
+
+18. Use Room Database for primary data persistence
+19. Use DataStore for key-value storage and preferences
+
+### Networking
+
+20. Use Ktor Client for new networking code
+21. Retrofit allowed for existing integrations
+
+### Testing
+
+22. Use JUnit 5 for unit tests
+23. Use Espresso for UI testing
+24. Use Compose UI Testing for Compose components
+25. Minimum 80% code coverage required
+26. Practice Test-Driven Development (TDD) strictly
+27. Tests required for all new code and bug fixes
+
+### Naming Conventions
+
+28. Follow Kotlin coding conventions
+29. Use snake_case for variables and functions
+30. Use PascalCase for classes and interfaces
+31. Use SCREAMING_SNAKE_CASE for constants
+32. Boolean variables should be descriptive without prefixes (active, permitted)
+33. Maximum function length is 50 lines
+
+### Documentation
+
+34. JSDoc-style documentation required for complex functions only
+35. Include parameter and return documentation for documented functions
+36. No TODO/FIXME/HACK comments - use issue tracker

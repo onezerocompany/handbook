@@ -1,0 +1,119 @@
+---
+title: Native iOS (SwiftUI) Standards
+---
+
+## Overview
+
+Native iOS development at OneZero uses SwiftUI exclusively for building user interfaces. We target the latest stable Swift version and support iOS versions from latest minus 2 (currently iOS 16+). Our iOS apps emphasize native platform conventions, smooth animations, and deep system integration.
+
+## SwiftUI
+
+SwiftUI is our only UI framework for iOS development. SwiftUI provides declarative, reactive UI development that integrates seamlessly with Swift's type system and modern concurrency features. We leverage SwiftUI's state management, view composition, and animation capabilities.
+
+All views are built using SwiftUI components and compositional patterns. We avoid UIKit interoperability except when SwiftUI doesn't provide needed functionality. When UIKit is necessary, we wrap it in SwiftUI views using UIViewRepresentable or UIViewControllerRepresentable.
+
+## Architecture
+
+We follow MVVM (Model-View-ViewModel) architecture exclusively. ViewModels are ObservableObject classes that manage state and business logic. Views observe ViewModels and update reactively when state changes. This separation makes code testable and maintainable.
+
+ViewModels should not reference views or contain SwiftUI-specific code. This keeps business logic independent of the UI framework and allows comprehensive unit testing without UI dependencies.
+
+## State Management
+
+We use SwiftUI's built-in state management with `@State`, `@StateObject`, `@ObservedObject`, and `@EnvironmentObject`. State flows down through the view hierarchy, and actions flow up through callbacks or bindings. We use the environment for dependency injection and shared state.
+
+For complex state that spans multiple screens or requires persistence, we use shared ViewModels injected through the environment. This provides centralized state management while maintaining SwiftUI's reactive patterns.
+
+## Data Persistence
+
+We use SwiftData and SQLite for local data persistence. SwiftData is preferred for new code as it provides a modern, Swift-native approach with automatic persistence and SwiftUI integration. SQLite is used for complex queries or when direct SQL access provides significant benefits.
+
+Data models use Swift's value types (structs) when possible for simplicity and safety. We use classes for entities that require identity and reference semantics.
+
+## Networking
+
+We use URLSession exclusively for networking. URLSession's modern async/await API provides clean, sequential code for network operations. We wrap URLSession calls in service layer functions that handle errors, parsing, and provide domain-specific types.
+
+Network responses are decoded using Codable with automatic JSON parsing. We validate responses thoroughly and handle network errors gracefully with appropriate user feedback.
+
+## Dependency Injection
+
+We use property wrappers like `@Environment` and `@EnvironmentObject` for dependency injection. Dependencies are injected at app startup and flow through the view hierarchy. This approach leverages SwiftUI's built-in mechanisms and avoids external dependency injection frameworks.
+
+For testability, we define protocols for dependencies and inject different implementations in tests versus production. This makes unit testing straightforward without complex mocking frameworks.
+
+## Navigation
+
+We use SwiftUI's native navigation with NavigationStack and NavigationLink. For more complex navigation flows, we use programmatic navigation with NavigationPath. Navigation state is managed in ViewModels when navigation depends on business logic.
+
+We avoid deep navigation hierarchies, preferring flat navigation structures with clear entry points. This aligns with iOS platform conventions and improves usability.
+
+## Accessibility
+
+We ensure WCAG 2.1 AA compliance for all user interfaces. SwiftUI provides excellent accessibility support by default, but we enhance it with accessibility labels, hints, and traits where needed. We test with VoiceOver regularly to ensure screen reader compatibility.
+
+Dynamic Type is supported throughout the app, allowing text to scale based on user preferences. Layouts adapt to different text sizes without breaking.
+
+## Testing
+
+We use Swift Testing (the new framework introduced in Swift 5.9+) for all testing. Tests cover unit tests for ViewModels and business logic, integration tests for services, and UI tests for critical user flows.
+
+ViewModels are tested without UI dependencies by creating instances directly and verifying state changes. UI tests use XCTest UI testing to verify complete user interactions.
+
+## Performance
+
+We optimize performance through lazy loading, image caching, and efficient list rendering. SwiftUI's LazyVStack and LazyHStack defer view creation until needed. We use AsyncImage or custom caching solutions for efficient image loading.
+
+We profile regularly with Instruments to identify performance bottlenecks and fix them before they impact users.
+
+## Platform Integration
+
+We integrate deeply with iOS platform features: widgets, notifications, shortcuts, ShareSheet, and system services. These integrations make our apps feel native and leverage iOS's unique capabilities.
+
+## Rules
+
+1. Use SwiftUI exclusively for all UI development
+2. No UIKit except when SwiftUI lacks needed functionality
+3. Wrap UIKit components in UIViewRepresentable/UIViewControllerRepresentable
+4. Follow MVVM architecture exclusively
+5. ViewModels must be ObservableObject classes
+6. ViewModels must not reference views or contain SwiftUI code
+7. Views observe ViewModels and update reactively
+8. Use @State, @StateObject, @ObservedObject, @EnvironmentObject for state management
+9. State flows down, actions flow up
+10. Use Environment for dependency injection
+11. Use shared ViewModels for complex cross-screen state
+12. Use SwiftData for primary data persistence
+13. Use SQLite for complex queries when beneficial
+14. Prefer value types (structs) for data models
+15. Use classes only for entities requiring identity/reference semantics
+16. Use URLSession exclusively for networking
+17. Use async/await API for network operations
+18. Wrap URLSession in service layer functions
+19. Decode responses using Codable
+20. Validate responses and handle errors gracefully
+21. Use @Environment and @EnvironmentObject for dependency injection
+22. Define protocols for dependencies to enable testing
+23. Inject different implementations for tests versus production
+24. Use NavigationStack and NavigationLink for navigation
+25. Use NavigationPath for programmatic navigation
+26. Manage navigation state in ViewModels when needed
+27. Prefer flat navigation over deep hierarchies
+28. Ensure WCAG 2.1 AA compliance for all UIs
+29. Add accessibility labels, hints, and traits where needed
+30. Test with VoiceOver regularly
+31. Support Dynamic Type throughout app
+32. Ensure layouts adapt to different text sizes
+33. Use Swift Testing framework for all tests
+34. Write unit tests for ViewModels and business logic
+35. Write integration tests for services
+36. Write UI tests for critical user flows
+37. Test ViewModels without UI dependencies
+38. Minimum 80% code coverage required
+39. Practice Test-Driven Development (TDD) strictly
+40. Optimize with lazy loading, image caching, efficient list rendering
+41. Use LazyVStack and LazyHStack for deferred view creation
+42. Profile regularly with Instruments
+43. Integrate with iOS platform features (widgets, notifications, shortcuts, ShareSheet)
+44. Target latest stable Swift version
+45. Support iOS latest - 2 (currently iOS 16+)
