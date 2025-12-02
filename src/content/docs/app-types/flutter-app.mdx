@@ -60,44 +60,82 @@ We optimize performance through widget rebuilding optimization, image caching, a
 
 ## Rules
 
+### Framework
+
 1. Use Flutter for cross-platform mobile apps (alternative to Expo)
+
+### State Management
+
 2. Use Riverpod for state management and dependency injection
 3. Use Bloc for complex state machines and event-driven architecture
 4. Prefer Riverpod for simpler state needs
+
+### Architecture
+
 5. Follow Bloc or MVVM architecture patterns
 6. Separate business logic from UI in ViewModels or BLoCs
+
+### Widget Organization
+
 7. Organize widgets into small, composable pieces
 8. Extract reusable widgets into separate files
 9. Co-locate widget files with tests and assets
+
+### Navigation
+
 10. Use Navigator 2.0 for declarative routing
 11. Centralize navigation logic for testability
+
+### Platform-Specific Code
+
 12. Handle platform-specific code through platform channels
 13. Use conditional imports for platform-divergent behavior
 14. Minimize platform-specific code - prefer cross-platform solutions
 15. Encapsulate platform-specific code behind unified interfaces
+
+### Offline Support
+
 16. Implement offline-first functionality with local database and sync
 17. Use SQLite or Hive for local storage
 18. Sync changes in background when connectivity restored
+
+### Testing
+
 19. Use Flutter's built-in testing framework
 20. Write unit tests, widget tests, and integration tests
 21. Minimum 80% code coverage required
 22. Practice Test-Driven Development (TDD) strictly
 23. Test on both iOS and Android platforms
 24. Test edge cases: network failures, state restoration, platform behaviors
-25. Implement comprehensive theming with ThemeData
-26. Support light and dark themes
-27. Respect system theme preferences
-28. Use pub package manager for dependencies
-29. Keep dependencies up to date with automated updates
-30. Follow Flutter and Dart conventions
-31. Use Dart analyzer and formatter for code style
-32. 2-space indentation required
-33. Run formatter in pre-commit hooks
-34. Optimize widget rebuilding with const constructors
-35. Implement image caching
-36. Use lazy loading for lists and heavy content
-37. Profile app regularly for performance bottlenecks
-38. Use snake_case for variables and functions
-39. Use PascalCase for classes and widgets
-40. Maximum function length is 50 lines
-41. Tests required for all new features and bug fixes
+25. Tests required for all new features and bug fixes
+
+### Theming
+
+26. Implement comprehensive theming with ThemeData
+27. Support light and dark themes
+28. Respect system theme preferences
+
+### Dependencies
+
+29. Use pub package manager for dependencies
+30. Keep dependencies up to date with automated updates
+
+### Code Style
+
+31. Follow Flutter and Dart conventions
+32. Use Dart analyzer and formatter for code style
+33. 2-space indentation required
+34. Run formatter in pre-commit hooks
+
+### Performance
+
+35. Optimize widget rebuilding with const constructors
+36. Implement image caching
+37. Use lazy loading for lists and heavy content
+38. Profile app regularly for performance bottlenecks
+
+### Naming Conventions
+
+39. Use snake_case for variables and functions
+40. Use PascalCase for classes and widgets
+41. Maximum function length is 50 lines
