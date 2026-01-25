@@ -103,51 +103,52 @@ Breaking changes are communicated to the team and coordinated to minimize disrup
 9. Mention issue numbers in commit messages when applicable
 10. Commit messages focus on "why" not "what"
 11. Write commit messages in imperative mood
+12. Each commit shall pertain to only one issue at a time
 
 ### Commit Signing
 
-12. All commits must be GPG or SSH signed
-13. Configure Git to sign commits automatically
-14. Reject unsigned commits in CI
+13. All commits must be GPG or SSH signed
+14. Configure Git to sign commits automatically
+15. Reject unsigned commits in CI
 
 ### Pre-Commit Hooks
 
-15. Use Lefthook and native Git hooks for pre-commit checks
-16. Run linting, formatting, type checking, and fast tests in pre-commit
-17. Never use --no-verify to bypass hooks
-18. Fix issues instead of bypassing verification
+16. Use Lefthook and native Git hooks for pre-commit checks
+17. Run linting, formatting, type checking, and fast tests in pre-commit
+18. Never use --no-verify to bypass hooks
+19. Fix issues instead of bypassing verification
 
 ### Merging Strategy
 
-19. Squash commits when merging pull requests
-20. Create one commit per feature or fix through squashing
-21. Ensure squashed commit messages follow Conventional Commits
+20. Squash commits when merging pull requests
+21. Create one commit per feature or fix through squashing
+22. Ensure squashed commit messages follow Conventional Commits
 
 ### Main Branch Protection
 
-22. Protect main branch - require PR reviews before merging
-23. No direct pushes to main
-24. Enforce PR reviews from code owners
-25. Require passing CI checks before merge
-26. Require up-to-date branches before merge
-27. Require signed commits
+23. Protect main branch - require PR reviews before merging
+24. No direct pushes to main
+25. Enforce PR reviews from code owners
+26. Require passing CI checks before merge
+27. Require up-to-date branches before merge
+28. Require signed commits
 
 ### Pull Request Process
 
-28. PRs must include clear descriptions and testing instructions
-29. Include screenshots for UI changes in PRs
-30. Link related issues in PR descriptions
-31. Use PR templates with checklists
-32. Respond to pull requests within 24 hours
+29. PRs must include clear descriptions and testing instructions
+30. Include screenshots for UI changes in PRs
+31. Link related issues in PR descriptions
+32. Use PR templates with checklists
+33. Respond to pull requests within 24 hours
 
 ### Breaking Changes
 
-33. Clearly document breaking changes in commit messages
-34. Use BREAKING CHANGE: footer for semantic versioning
-35. Communicate breaking changes to the team
+34. Clearly document breaking changes in commit messages
+35. Use BREAKING CHANGE: footer for semantic versioning
+36. Communicate breaking changes to the team
 
 ### History Management
 
-36. Maintain clean, linear git history through squashing
-37. Use git log to review project history
-38. Auto-generate CHANGELOG from commit messages using [Release Please](/practices/release-strategy/)
+37. Maintain clean, linear git history through squashing
+38. Use git log to review project history
+39. Auto-generate CHANGELOG from commit messages using [Release Please](/practices/release-strategy/)
